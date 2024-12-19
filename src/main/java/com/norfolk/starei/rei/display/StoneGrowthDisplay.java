@@ -19,9 +19,16 @@ public class StoneGrowthDisplay extends BasicDisplay {
         this.planet = planet;
     }
 
+    public StoneGrowthDisplay(EntryIngredient in, EntryStack<?> out) {
+        super(Collections.singletonList(in), Collections.singletonList(EntryIngredient.of(out)));
+        this.planet = null;
+    }
+
     private final Planet planet;
 
-    public Planet getPlanet() {return planet;}
+    public Planet getPlanet() {
+        return planet;
+    }
 
     @Override
     public CategoryIdentifier<?> getCategoryIdentifier() {

@@ -42,11 +42,18 @@ public class StoneGrowthCategory implements DisplayCategory<StoneGrowthDisplay> 
         widgets.add(Widgets.createRecipeBase(bounds));
         widgets.add(Widgets.createArrow(new Point(startPoint.x + 27, startPoint.y + 4)));
         widgets.add(Widgets.createResultSlotBackground(new Point(startPoint.x + 61, startPoint.y + 5)));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + 4, startPoint.y + 5)));
-        Rectangle planetBounds = new Rectangle(startPoint.x + 4, startPoint.y + 5, 16, 16);
-        var planet = Widgets.createTexturedWidget(display.getPlanet().getIdentifier(), planetBounds, 0, 0, 16, 16);
-        widgets.add(Widgets.withTooltip(Widgets.withBounds(planet, planetBounds),
-                new TranslatableText("starei.planet." + display.getPlanet().getName())));
+
+        var inSlot = Widgets.createSlot(new Point(startPoint.x + 4, startPoint.y + 5));
+        widgets.add(inSlot);
+
+        if (display.getPlanet() != null) {
+            Rectangle planetBounds = new Rectangle(startPoint.x + 4, startPoint.y + 5, 16, 16);
+            var planet = Widgets.createTexturedWidget(display.getPlanet().getIdentifier(), planetBounds, 0, 0, 16, 16);
+            widgets.add(Widgets.withTooltip(Widgets.withBounds(planet, planetBounds),
+                    new TranslatableText("starei.planet." + display.getPlanet().getName())));
+        } else {
+            inSlot.entries(display.getInputEntries().get(0)).markInput();
+        }
 
         widgets.add(Widgets.createSlot(new Point(startPoint.x + 61, startPoint.y + 5))
                 .entries(display.getOutputEntries().get(0)).disableBackground().markOutput());

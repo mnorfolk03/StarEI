@@ -1,6 +1,7 @@
 package com.norfolk.starei.rei.client;
 
 import com.github.alexnijjar.ad_astra.registry.ModFluids;
+import com.github.alexnijjar.ad_astra.registry.ModItems;
 import com.norfolk.starei.rei.category.*;
 import com.norfolk.starei.rei.display.*;
 import com.norfolk.starei.rei.misc.CustomMachinery;
@@ -22,6 +23,7 @@ import net.minecraft.item.Items;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import techreborn.init.TRContent;
 
 import static com.norfolk.starei.rei.misc.CustomMachinery.CUSTOM_MACHINE;
@@ -33,8 +35,8 @@ public class StarEIClientPlugin implements REIClientPlugin {
         return EntryStacks.of(Registry.ITEM.get(new Identifier(namespace, item)));
     }
 
-    EntryStack<FluidStack> entryFluid(String namespace, String item) {
-        return EntryStacks.of(Registry.FLUID.get(new Identifier(namespace, item)));
+    EntryStack<FluidStack> entryFluid(String namespace, String item, long amt) {
+        return EntryStacks.of(Registry.FLUID.get(new Identifier(namespace, item)),amt);
     }
 
     @Override
@@ -67,34 +69,34 @@ public class StarEIClientPlugin implements REIClientPlugin {
     public void registerDisplays(DisplayRegistry registry) {
         REIClientPlugin.super.registerDisplays(registry);
 
-        registry.add(new ElectrolyzerDisplay(EntryStacks.of(Fluids.WATER), EntryStacks.of(ModFluids.OXYGEN_STILL)));
-        registry.add(new ElectrolyzerDisplay(entryFluid("kubejs", "hellfire"), entryFluid("kubejs", "smite")));
+        registry.add(new ElectrolyzerDisplay(EntryStacks.of(Fluids.WATER,8100), EntryStacks.of(ModFluids.OXYGEN_STILL,860)));
+        registry.add(new ElectrolyzerDisplay(entryFluid("kubejs", "hellfire",810), entryFluid("kubejs", "smite",8100)));
 
         for (Planet planet : Planet.values()) {
             registry.add(new StoneGrowthDisplay(planet, EntryStacks.of(planet.getItem())));
         }
 
-        registry.add(new ChannelingTransformerDisplay(entryFluid("kubejs", "smite"), 720000));
-        registry.add(new ShimmerRefineryDisplay(entryItem("createastral", "refining_agent"), entryFluid("kubejs", "shimmer"),
+        registry.add(new ChannelingTransformerDisplay(entryFluid("kubejs", "smite",81000), 720000));
+        registry.add(new ShimmerRefineryDisplay(entryItem("createastral", "refining_agent"), entryFluid("kubejs", "shimmer",81000),
                 EntryStacks.of(TRContent.Parts.UU_MATTER), 125, 20000));
 
-        registry.add(new DistilleryDisplay(entryItem("createastral", "pure_biomatter"), EntryStacks.of(Fluids.WATER),
-                entryFluid("techreborn", "biofuel"), 100, 10000, false));
-        registry.add(new DistilleryDisplay(entryItem("createastral", "refining_agent"), entryFluid("techreborn", "oil"),
-                entryFluid("kubejs", "hellfire"), 100, 10000, false));
-        registry.add(new DistilleryDisplay(entryItem("createastral", "refining_agent"), entryFluid("techreborn", "oil"),
-                entryFluid("kubejs", "hellfire"), 100, 2500, true));
-        registry.add(new DistilleryDisplay(entryItem("createastral", "uranium_residue"), entryFluid("techreborn", "mercury"),
-                entryFluid("tconstruct", "molten_uranium"), 200, 10000, true));
+        registry.add(new DistilleryDisplay(entryItem("createastral", "pure_biomatter"), EntryStacks.of(Fluids.WATER,81000),
+                entryFluid("techreborn", "biofuel",324000), 100, 10000, false));
+        registry.add(new DistilleryDisplay(entryItem("createastral", "refining_agent"), entryFluid("techreborn", "oil",81000),
+                entryFluid("kubejs", "hellfire",81000), 100, 10000, false));
+        registry.add(new DistilleryDisplay(entryItem("createastral", "refining_agent"), entryFluid("techreborn", "oil",81000),
+                entryFluid("kubejs", "hellfire",81000), 100, 2500, true));
+        registry.add(new DistilleryDisplay(entryItem("createastral", "uranium_residue"), entryFluid("techreborn", "mercury",81000),
+                entryFluid("tconstruct", "molten_uranium",81000), 200, 10000, true));
 
 
-        registry.add(new GasMixerDisplay(entryFluid("techreborn", "methane"),
+        registry.add(new GasMixerDisplay(entryFluid("techreborn", "methane",81000/4),
                 EntryStacks.of(Items.OXEYE_DAISY), EntryStacks.of(Items.GHAST_TEAR)));
         registry.add(new GasMixerDisplay(EntryStacks.of(ModFluids.OXYGEN_STILL), EntryStacks.of(Items.WITHER_ROSE),
                 EntryStacks.of(new ItemStack(Items.GLASS_BOTTLE, 3)),
                 EntryStacks.of(new ItemStack(Items.DRAGON_BREATH, 3))));
 
-        registry.add(new GasMixerDisplay(entryFluid("techreborn", "mercury"),
+        registry.add(new GasMixerDisplay(entryFluid("techreborn", "mercury",81000/81),
                 EntryStacks.of(new ItemStack(Items.LILY_OF_THE_VALLEY, 2)),
                 EntryStacks.of(Items.SPIDER_EYE, 3)));
 
@@ -115,5 +117,37 @@ public class StarEIClientPlugin implements REIClientPlugin {
 
         registry.add(new SlimeFurnaceDisplay(slimeballs.build(), 2048, 2, 600));
         registry.add(new SlimeFurnaceDisplay(slimeblocks.build(), 2048, 2, 5400));
+
+
+        registry.add(new StoneGrowthDisplay(
+                EntryIngredients.ofItemTag(TagKey.of(Registry.BLOCK_KEY, new Identifier("createastral:stone_growth_chamber/building_blocks/andesite"))),
+                EntryStacks.of(Items.ANDESITE)));
+
+        registry.add(new StoneGrowthDisplay(
+                EntryIngredients.ofItemTag(TagKey.of(Registry.BLOCK_KEY, new Identifier("createastral:stone_growth_chamber/building_blocks/cobblestone"))),
+                EntryStacks.of(Items.COBBLESTONE)));
+
+        registry.add(new StoneGrowthDisplay(
+                EntryIngredients.ofItemTag(TagKey.of(Registry.BLOCK_KEY, new Identifier("createastral:stone_growth_chamber/building_blocks/glacio_cobblestone"))),
+                EntryStacks.of(ModItems.GLACIO_COBBLESTONE)));
+
+        registry.add(new StoneGrowthDisplay(
+                EntryIngredients.ofItemTag(TagKey.of(Registry.BLOCK_KEY, new Identifier("createastral:stone_growth_chamber/building_blocks/mars_cobblestone"))),
+                EntryStacks.of(ModItems.MARS_COBBLESTONE)));
+
+
+        registry.add(new StoneGrowthDisplay(
+                EntryIngredients.ofItemTag(TagKey.of(Registry.BLOCK_KEY, new Identifier("createastral:stone_growth_chamber/building_blocks/mercury_cobblestone"))),
+                EntryStacks.of(ModItems.MERCURY_COBBLESTONE)));
+
+
+        registry.add(new StoneGrowthDisplay(
+                EntryIngredients.ofItemTag(TagKey.of(Registry.BLOCK_KEY, new Identifier("createastral:stone_growth_chamber/building_blocks/moon_cobblestone"))),
+                EntryStacks.of(ModItems.MOON_COBBLESTONE)));
+
+
+        registry.add(new StoneGrowthDisplay(
+                EntryIngredients.ofItemTag(TagKey.of(Registry.BLOCK_KEY, new Identifier("createastral:stone_growth_chamber/building_blocks/venus_cobblestone"))),
+                EntryStacks.of(ModItems.VENUS_COBBLESTONE)));
     }
 }
